@@ -1,0 +1,62 @@
+cff-version: 1.2.0
+message: "If you use the PsyMix identifiability workbench, audit tables, or reproducibility scripts, please cite the accompanying JCIM article and software archive."
+title: "PsyMix: Cross-Scale Taste Identifiability Workbench and JCIM Reproducibility Archive"
+version: "1.0.0"
+date-released: "2026-11-25"
+license: "MIT"
+type: software
+repository-code: "[https://github.com/Ruvio413/PsyMix](https://github.com/Ruvio413/PsyMix)
+url: "[https://ruvio413.github.io/PsyMix/](https://ruvio413.github.io/PsyMix/)"
+keywords:
+  - computational chemosensation
+  - taste prediction
+  - sensory psychophysics
+  - mixture modeling
+  - identifiability audit
+  - flavor chemistry
+  - reproducibility
+authors:
+  - family-names: "Chen"
+    given-names: "Dedong"
+    affiliation: "Guangxi Key Laboratory of Zhuang and Yao Ethnic Medicine, Guangxi University of Chinese Medicine, Nanning 530200, Guangxi, China"
+  - family-names: "Zhang"
+    given-names: "Miao"
+    affiliation: "Guangxi Key Laboratory of Zhuang and Yao Ethnic Medicine, Guangxi University of Chinese Medicine, Nanning 530200, Guangxi, China"
+  - family-names: "Zhu"
+    given-names: "Hua"
+    email: "zhuhuagx@163.com"
+    affiliation: "Guangxi Key Laboratory of Zhuang and Yao Ethnic Medicine, Guangxi University of Chinese Medicine, Nanning 530200, Guangxi, China"
+  - family-names: "Xu"
+    given-names: "Liba"
+    email: "xulb@gxtcmu.edu.cn"
+    affiliation: "Guangxi Key Laboratory of Zhuang and Yao Ethnic Medicine, Guangxi University of Chinese Medicine, Nanning 530200, Guangxi, China"
+  - family-names: "Lu"
+    given-names: "Jiahao"
+    email: "lujiahao2022@126.com"
+    affiliation: "Guangxi Key Laboratory of Zhuang and Yao Ethnic Medicine, Guangxi University of Chinese Medicine, Nanning 530200, Guangxi, China"
+preferred-citation:
+  type: article
+  title: "From Molecular Taste Labels to Human Sensory Responses: Contributions of Chemical Information, Models, and Sensory Calibration in Mixtures and Foods"
+  journal: "Journal of Chemical Information and Modeling"
+  year: 2026
+  publisher:
+    name: "American Chemical Society"
+  authors:
+    - family-names: "Chen"
+      given-names: "Dedong"
+      affiliation: "Guangxi Key Laboratory of Zhuang and Yao Ethnic Medicine, Guangxi University of Chinese Medicine, Nanning 530200, Guangxi, China"
+    - family-names: "Zhang"
+      given-names: "Miao"
+      affiliation: "Guangxi Key Laboratory of Zhuang and Yao Ethnic Medicine, Guangxi University of Chinese Medicine, Nanning 530200, Guangxi, China"
+    - family-names: "Zhu"
+      given-names: "Hua"
+      email: "zhuhuagx@163.com"
+      affiliation: "Guangxi Key Laboratory of Zhuang and Yao Ethnic Medicine, Guangxi University of Chinese Medicine, Nanning 530200, Guangxi, China"
+    - family-names: "Xu"
+      given-names: "Liba"
+      email: "xulb@gxtcmu.edu.cn"
+      affiliation: "Guangxi Key Laboratory of Zhuang and Yao Ethnic Medicine, Guangxi University of Chinese Medicine, Nanning 530200, Guangxi, China"
+    - family-names: "Lu"
+      given-names: "Jiahao"
+      email: "lujiahao2022@126.com"
+      affiliation: "Guangxi Key Laboratory of Zhuang and Yao Ethnic Medicine, Guangxi University of Chinese Medicine, Nanning 530200, Guangxi, China"

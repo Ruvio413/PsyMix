@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PsyMix Identifiability Workbench — JCIM Companion</title>
+<style>
+  :root {
+    --blue: #0072B2;
+    --blue-soft: #E6F2FA;
+    --teal: #1B7F6B;
+    --teal-soft: #E6F4F0;
+    --red: #C0392B;
+    --red-soft: #FCECEB;
+    --amber: #D55E00;
+    --amber-soft: #FDF0E6;
+    --purple: #6A51A3;
+    --purple-soft: #F1EEF8;
+    --slate: #4D648D;
+    --slate-lt: #9BB5CE;
+    --charcoal: #2C3E50;
+    --muted: #5A6A7E;
+    --border: #DCE3EC;
+    --bg: #F4F7FA;
+    --card: #FFFFFF;
+    --stripe: #F8FAFC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--charcoal);
+    line-height: 1.48;
+    font-size: 13.5px;
+  }
+  /* Header */
+  .hero {
+    background: linear-gradient(135deg, #1E2C3A 0%, #2C3E50 62%, #194A6D 100%);
+    color: #FFFFFF;
+    border-bottom: 3px solid var(--blue);
+    padding: 18px 28px 16px;
+  }
+  .hero-inner {
+    max-width: 1380px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .hero-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+  .hero-title span { color: #7CC4F5; }
+  .hero-sub {
+    font-size: 12.5px;
+    color: #CBD5E1;
+    margin-top: 3px;
+  }
+  .hero-badges {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  .privacy-pill {
+    background: rgba(27, 127, 107, 0.28);
+    border: 1px solid #4FD1B5;
+    color: #D1FAE5;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .kpi-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .kpi-chip {
+    background: rgba(255,255,255,0.11);
+    border: 1px solid rgba(255,255,255,0.20);
+    color: #F1F5F9;
+    padding: 2px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* Tab navigation */
+  .nav-bar {
+    background: #FFFFFF;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    box-shadow: 0 1px 4px rgba(15,23,42,0.04);
+  }
+  .nav-inner {
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .tab-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .tab-btn:hover { color: var(--charcoal); background: var(--stripe); }
+  .tab-btn.active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+    background: #F4F9FD;
+  }
+  .tab-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    font-size: 11px;
+    background: #E2E8F0;
+    color: var(--charcoal);
+  }
+  .tab-btn.active .tab-num { background: var(--blue); color: #FFFFFF; }
+
+  /* Main container */
+  .main {
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: 18px 28px 42px;
+  }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* Banners & Cards */
+  .notice-bar {
+    background: #FFF9EB;
+    border: 1px solid #F3D18A;
+    border-left: 4px solid var(--amber);
+    color: #7C3A00;
+    padding: 9px 14px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .notice-bar.info {
+    background: var(--blue-soft);
+    border-color: #B4D7EE;
+    border-left-color: var(--blue);
+    color: #0B466E;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.03);
+    margin-bottom: 16px;
+  }
+  .card-hdr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #EDF2F7;
+    flex-wrap: wrap;
+  }
+  .card-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--charcoal);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tag-dot {
+    width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+  }
+
+  /* Controls & Buttons */
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .seg-group {
+    display: inline-flex;
+    background: #EDF2F7;
+    padding: 3px;
+    border-radius: 7px;
+    gap: 3px;
+  }
+  .seg-btn {
+    border: none;
+    background: transparent;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .seg-btn.active { background: #FFFFFF; color: var(--blue); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  select, input[type="text"], input[type="number"] {
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 5px 9px;
+    font-size: 12.5px;
+    color: var(--charcoal);
+    background: #FFFFFF;
+  }
+  select:focus, input:focus { outline: 2px solid rgba(0,114,178,0.22); border-color: var(--blue); }
+  .btn {
+    border: 1px solid var(--border);
+    background: #FFFFFF;
+    color: var(--charcoal);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.14s;
+  }
+  .btn:hover { background: var(--stripe); border-color: #94A3B8; }
+  .btn-primary { background: var(--blue); color: #FFFFFF; border-color: #005A8D; }
+  .btn-primary:hover { background: #005F96; }
+  .btn-teal { background: var(--teal); color: #FFFFFF; border-color: #146353; }
+  .btn-teal:hover { background: #146353; }
+  .btn-preset {
+    background: var(--stripe);
+    border: 1px solid #CBD5E1;
+    font-size: 11.8px;
+    padding: 5px 10px;
+  }
+  .btn-preset.active {
+    background: var(--blue-soft);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  /* Pills & Status badges */
+  .badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.35;
+    white-space: nowrap;
+  }
+  .b-pass { background: var(--teal-soft); color: var(--teal); border: 1px solid #A7DDD0; }
+  .b-warn { background: var(--red-soft); color: var(--red); border: 1px solid #F2B8B5; }
+  .b-na   { background: #F1F5F9; color: #64748B; border: 1px solid #CBD5E1; }
+  .b-blue { background: var(--blue-soft); color: var(--blue); border: 1px solid #A9D3EF; }
+  .b-purp { background: var(--purple-soft); color: var(--purple); border: 1px solid #CBBCE6; }
+  .b-amb  { background: var(--amber-soft); color: var(--amber); border: 1px solid #F3C4A4; }
+
+  /* Tables */
+  .tbl-wrap {
+    overflow-x: auto;
+    max-height: 490px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    background: #F1F5F9;
+    color: var(--charcoal);
+    font-weight: 700;
+    text-align: left;
+    padding: 8px 9px;
+    border-bottom: 2px solid #CBD5E1;
+    z-index: 2;
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 7px 9px;
+    border-bottom: 1px solid #EDF2F7;
+    vertical-align: middle;
+  }
+  tbody tr:nth-child(even) { background: #FAFBFD; }
+  tbody tr:hover { background: #EFF7FC; }
+  .clickable-row { cursor: pointer; }
+  .mono { font-family: Consolas, "SFMono-Regular", Menlo, monospace; font-size: 11.4px; }
+
+  /* Grid layouts for Tab 2 & Tab 3 */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 1020px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  .preset-bar {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .drop-zone {
+    border: 1.5px dashed var(--slate-lt);
+    background: #FAFBFD;
+    border-radius: 8px;
+    padding: 9px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .drop-zone.dragover {
+    border-color: var(--blue);
+    background: var(--blue-soft);
+    color: var(--blue);
+  }
+  .metric-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .metric-box {
+    background: var(--stripe);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 10px;
+  }
+  .metric-lbl { font-size: 10.8px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+  .metric-val { font-size: 17px; font-weight: 700; color: var(--charcoal); margin-top: 2px; }
+  .alert-box {
+    border-radius: 7px;
+    padding: 8px 11px;
+    font-size: 12px;
+    margin-top: 8px;
+    line-height: 1.42;
+  }
+  .alert-red { background: var(--red-soft); border: 1px solid #F2B8B5; color: #8B1E13; }
+  .alert-teal { background: var(--teal-soft); border: 1px solid #A7DDD0; color: #0F5346; }
+  .alert-amb { background: var(--amber-soft); border: 1px solid #F3C4A4; color: #8C3B00; }
+
+  .svg-frame {
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 7px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .form-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .field input, .field select { width: 105px; }
+  .hash-box {
+    background: #1E293B;
+    color: #93C5FD;
+    font-family: Consolas, Menlo, monospace;
+    font-size: 11.2px;
+    padding: 9px 11px;
+    border-radius: 6px;
+    word-break: break-all;
+    margin: 8px 0;
+  }
+  .detail-panel {
+    background: #F4F9FD;
+    border: 1px solid #B7D9F0;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-top: 12px;
+  }
+  a.doi-link { color: var(--blue); text-decoration: none; font-weight: 600; }
+  a.doi-link:hover { text-decoration: underline; }
+  footer {
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: 12px 28px 28px;
+    font-size: 11.5px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-title">PsyMix <span>Identifiability Workbench</span></div>
+      <div class="hero-sub">From Molecular Taste Labels to Human Sensory Responses — JCIM Interactive Companion &amp; Pre-Experiment Audit Tool</div>
+    </div>
+    <div class="hero-badges">
+      <div class="privacy-pill">&#9679; 100% Client-Side &middot; Zero Data Upload &middot; Works Offline from Zenodo</div>
+      <div class="kpi-row" id="hero-kpis">
+        <span class="kpi-chip">44 Audit Slices</span>
+        <span class="kpi-chip">153 Frozen Configs</span>
+        <span class="kpi-chip">706 Scored Contrasts</span>
+        <span class="kpi-chip">111 SHA-256 Verified</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-bar" role="tablist">
+  <div class="nav-inner">
+    <button class="tab-btn active" data-tab="tab1" onclick="switchTab('tab1')">
+      <span class="tab-num">1</span> 44-Slice &amp; 706-Contrast Explorer
+    </button>
+    <button class="tab-btn" data-tab="tab2" onclick="switchTab('tab2')">
+      <span class="tab-num">2</span> Pre-Experiment Identifiability Workbench (A2 / A3 / A6)
+    </button>
+    <button class="tab-btn" data-tab="tab3" onclick="switchTab('tab3')">
+      <span class="tab-num">3</span> Curated Parameters &amp; Protocol Provenance
+    </button>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ====================================================================== -->
+  <!-- TAB 1: 44-SLICE & 706-CONTRAST EXPLORER                                -->
+  <!-- ====================================================================== -->
+  <section id="tab1" class="tab-pane active">
+    <div class="notice-bar">
+      <span>&#9888; Methodological Guardrail: All errors are reported strictly within native study scales (no cross-study pooling). Small-sample slices (n = 2&ndash;3) are marked <em>No CI</em>.</span>
+      <span class="badge b-blue" id="t1-count-badge">Loading frozen bundle...</span>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <div class="seg-group" id="t1-subview">
+          <button class="seg-btn active" onclick="setExplorerView('slices')">44 Audit Slices (A1–A6)</button>
+          <button class="seg-btn" onclick="setExplorerView('contrasts')">706 Scored Contrasts</button>
+          <button class="seg-btn" onclick="setExplorerView('models')">153 Model Configs (4 Families)</button>
+        </div>
+
+        <select id="f-task" onchange="renderExplorer()" title="Filter by task domain">
+          <option value="ALL">All Tasks (T1a–T6b)</option>
+          <option value="T1a">T1a: Molecules</option>
+          <option value="T1b">T1b: Botanical Sets</option>
+          <option value="T2">T2: Fruit Cohorts</option>
+          <option value="T3">T3: Binary Sweeteners</option>
+          <option value="T4">T4: Residuals &amp; Ternary</option>
+          <option value="T5">T5: Cross-Study Transfer</option>
+          <option value="T6a">T6a: Omissions / Additions / Yogurt</option>
+          <option value="T6b">T6b: Thermal &amp; Drying Processing</option>
+        </select>
+
+        <select id="f-criterion" onchange="renderExplorer()" title="Filter slices by audit criterion">
+          <option value="ALL">All Criteria (A1–A6)</option>
+          <option value="A1">A1 Holdout / Leakage</option>
+          <option value="A2">A2 Collinearity</option>
+          <option value="A3">A3 Derangements</option>
+          <option value="A4">A4 Chemical Coverage</option>
+          <option value="A5">A5 Baselines</option>
+          <option value="A6">A6 Anchor Geometry</option>
+        </select>
+
+        <select id="f-state" onchange="renderExplorer()" title="Filter slices by audit state">
+          <option value="ALL">All States</option>
+          <option value="Pass">Pass</option>
+          <option value="Warning">Warning</option>
+          <option value="N/A">N/A</option>
+        </select>
+
+        <select id="f-family" onchange="renderExplorer()" style="display:none;" title="Filter by model family">
+          <option value="ALL">All 4 Model Families (153)</option>
+          <option value="1. Psychophysical, DoT & null">1. Psychophysical, DoT &amp; null</option>
+          <option value="2. Classical tabular & molecular ML">2. Classical tabular &amp; molecular ML</option>
+          <option value="3. Botanical set & molecular NNs">3. Botanical set &amp; molecular NNs</option>
+          <option value="4. Continuous-dose adapters & graph">4. Continuous-dose adapters &amp; graph</option>
+        </select>
+
+        <select id="f-axis" onchange="renderExplorer()" style="display:none;" title="Filter by attribution axis">
+          <option value="ALL">All Attribution Axes (706)</option>
+          <option value="Information">Information (175)</option>
+          <option value="Model">Model (137)</option>
+          <option value="Calibration">Calibration (113)</option>
+          <option value="Multi-factor (descriptive)">Multi-factor descriptive (281)</option>
+        </select>
+
+        <input type="text" id="f-search" placeholder="Search dataset, model, endpoint..." oninput="renderExplorer()" style="min-width:215px;">
+      </div>
+
+      <div class="tbl-wrap" id="explorer-table-wrap"></div>
+      <div id="slice-detail-box" class="detail-panel" style="display:none;"></div>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- TAB 2: PRE-EXPERIMENT IDENTIFIABILITY WORKBENCH                        -->
+  <!-- ====================================================================== -->
+  <section id="tab2" class="tab-pane">
+    <div class="card" style="padding:13px 16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+        <strong style="font-size:13px;">One-Click Paper Benchmark Presets (or Upload Custom Design CSV Locally)</strong>
+        <button class="btn" onclick="downloadSampleCSV()">&#8681; Download Sample CSV</button>
+      </div>
+      <div class="preset-bar" id="preset-buttons"></div>
+      <div class="drop-zone" id="csv-dropzone">
+        <span id="preset-desc">Select a preset above or drag &amp; drop a CSV file here (columns: <span class="mono">sample_id, AnalyteA_w0.507, AnalyteB_w0.877, ...</span> — processed 100% locally in browser memory).</span>
+        <label class="btn btn-primary" style="cursor:pointer;">
+          Load Local CSV
+          <input type="file" id="csv-file-input" accept=".csv,text/csv" style="display:none;" onchange="handleCSVFile(this.files[0])">
+        </label>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- CARD A2: Collinearity & Dirichlet Designer -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title"><span class="tag-dot" style="background:var(--blue);"></span> A2. Collinearity &amp; Dirichlet Dispersion Designer</div>
+          <span class="badge" id="a2-badge">—</span>
+        </div>
+        <div class="form-row">
+          <div class="field" style="flex:1; min-width:190px;">
+            <label>Analyte weights (comma-separated, w = rel. potency or 1/T)</label>
+            <input type="text" id="a2-weights-input" style="width:100%;" onchange="recomputeA2FromInputs()">
+          </div>
+          <div class="field">
+            <label>Target r</label>
+            <input type="number" id="a2-target-r" value="0.90" step="0.02" min="0.50" max="0.97" onchange="recomputeA2FromInputs()">
+          </div>
+        </div>
+        <div class="metric-strip">
+          <div class="metric-box">
+            <div class="metric-lbl">Pearson r (SUM vs Load)</div>
+            <div class="metric-val" id="a2-r-val">—</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-lbl">VIF = 1 / (1 &minus; r&sup2;)</div>
+            <div class="metric-val" id="a2-vif-val">—</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-lbl">Dirichlet SD for target r</div>
+            <div class="metric-val" id="a2-sd-val">—</div>
+          </div>
+        </div>
+        <div class="svg-frame" id="a2-svg-box"></div>
+        <div id="a2-alert" class="alert-box"></div>
+      </div>
+
+      <!-- CARD A3: Derangement Resolution Floor -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title"><span class="tag-dot" style="background:var(--purple);"></span> A3. Threshold Reassignment Resolution Floor</div>
+          <span class="badge" id="a3-badge">—</span>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Distinct active tastants (k)</label>
+            <input type="number" id="a3-k-input" value="4" min="1" max="24" step="1" oninput="updateA3(this.value)">
+          </div>
+          <div class="field" style="flex:1; min-width:180px;">
+            <label>Quick slider (k = 1 to 15)</label>
+            <input type="range" id="a3-k-slider" value="4" min="1" max="15" step="1" oninput="updateA3(this.value)" style="width:100%;">
+          </div>
+        </div>
+        <div class="metric-strip">
+          <div class="metric-box">
+            <div class="metric-lbl">Active tastants k</div>
+            <div class="metric-val" id="a3-k-val">—</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-lbl">Derangements D(k)</div>
+            <div class="metric-val" id="a3-d-val">—</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-lbl">Min rank p_min = 1/(1+D)</div>
+            <div class="metric-val" id="a3-p-val">—</div>
+          </div>
+        </div>
+        <div class="svg-frame" id="a3-svg-box"></div>
+        <div id="a3-alert" class="alert-box"></div>
+      </div>
+
+      <!-- CARD A6: Anchor Geometry & @1 Amplification Simulator -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title"><span class="tag-dot" style="background:var(--amber);"></span> A6. Anchor Geometry &amp; @1 Amplification Simulator</div>
+          <span class="badge" id="a6-badge">—</span>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Calibration mode</label>
+            <select id="a6-mode" onchange="updateA6()" style="width:142px;">
+              <option value="dot_log">DOT-log @1 (U/K)</option>
+              <option value="source_affine">Source-affine @1 (-b/a)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Anchor load c_A / U_A</label>
+            <input type="number" id="a6-cA" value="0.0837" step="0.01" oninput="updateA6()">
+          </div>
+          <div class="field">
+            <label>Anchor rating I_A</label>
+            <input type="number" id="a6-IA" value="1.31" step="0.1" oninput="updateA6()">
+          </div>
+          <div class="field" id="a6-K-wrap">
+            <label>Curvature K</label>
+            <input type="number" id="a6-K" value="2.33647" step="0.1" oninput="updateA6()">
+          </div>
+          <div class="field" id="a6-zc-wrap" style="display:none;">
+            <label>Zero cross -b/a</label>
+            <input type="number" id="a6-zc" value="34.613" step="1.0" oninput="updateA6()">
+          </div>
+          <div class="field">
+            <label>Target c_1 / U_1</label>
+            <input type="number" id="a6-c1" value="1.076" step="0.1" oninput="updateA6()">
+          </div>
+          <div class="field">
+            <label>Scale max</label>
+            <input type="number" id="a6-smax" value="15" step="1" oninput="updateA6()">
+          </div>
+        </div>
+        <div class="metric-strip">
+          <div class="metric-box">
+            <div class="metric-lbl">Anchor response H(c_A)</div>
+            <div class="metric-val" id="a6-h0-val">—</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-lbl">Amplifier &alpha; = I_A / H_0</div>
+            <div class="metric-val" id="a6-alpha-val">—</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-lbl">Predicted &Delta;&#206; (I_1)</div>
+            <div class="metric-val" id="a6-pred-val">—</div>
+          </div>
+        </div>
+        <div class="svg-frame" id="a6-svg-box"></div>
+        <div id="a6-alert" class="alert-box"></div>
+      </div>
+
+      <!-- CARD 4: Pre-Registration Audit Receipt Export (SHA-256) -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title"><span class="tag-dot" style="background:var(--teal);"></span> Export Pre-Registration Audit Receipt (SHA-256)</div>
+          <span class="badge b-pass" id="sha-engine-badge">SHA-256 Ready</span>
+        </div>
+        <p style="font-size:12.2px; color:var(--muted); margin-bottom:10px;">
+          Lock your prospective experimental design check (A2 collinearity, A3 derangement floor, A6 anchor conditioning) with a UTC timestamp and byte-level SHA-256 digest before collecting sensory ratings (Section 4.5). Uses <span class="mono">crypto.subtle</span> with a built-in pure-JS SHA-256 fallback for offline <span class="mono">file://</span> execution.
+        </p>
+        <div id="receipt-summary" style="background:var(--stripe); border:1px solid var(--border); border-radius:7px; padding:10px 12px; font-size:12px; line-height:1.55;"></div>
+        <div class="hash-box" id="receipt-hash-display">Computing SHA-256...</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+          <button class="btn btn-primary" onclick="exportReceipt('json')">&#8681; Export JSON Receipt (.json)</button>
+          <button class="btn btn-teal" onclick="exportReceipt('md')">&#8681; Export Markdown Receipt (.md)</button>
+          <button class="btn" onclick="refreshReceipt()">&#8635; Refresh Timestamp &amp; Hash</button>
+        </div>
+        <div id="export-status" style="font-size:11.5px; color:var(--teal); font-weight:600; margin-top:8px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- TAB 3: CURATED PARAMETERS & PROTOCOL PROVENANCE                        -->
+  <!-- ====================================================================== -->
+  <section id="tab3" class="tab-pane">
+    <div class="notice-bar info">
+      <span>&#128274; Compliance Boundary: Zero restricted third-party raw datasets are redistributed; only PsyMix protocol constants and DOI-linked single-compound parameters are bundled.</span>
+      <span class="badge b-pass">100% DOI-Linked Provenance</span>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title"><span class="tag-dot" style="background:var(--teal);"></span> 1. Frozen Single-Compound Curvature Parameters (K)</div>
+        <span class="badge b-blue">Source scale amplitudes discarded at transfer</span>
+      </div>
+      <div class="tbl-wrap" style="max-height:240px;">
+        <table>
+          <thead>
+            <tr><th>Channel</th><th>Model</th><th>Response Form</th><th>Frozen K</th><th>Calibration Reference Series</th><th>Primary Source (DOI)</th></tr>
+          </thead>
+          <tbody id="t3-curv-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title"><span class="tag-dot" style="background:var(--blue);"></span> 2. Curated Medium-Specific Threshold Dictionary</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <select id="t3-qual-filter" onchange="renderThresholds()">
+            <option value="ALL">All Qualities</option>
+            <option value="Bitterness">Bitterness</option>
+            <option value="Astringency">Astringency</option>
+            <option value="Sweetness">Sweetness</option>
+            <option value="Sourness">Sourness</option>
+          </select>
+          <input type="text" id="t3-search" placeholder="Filter compound, matrix, DOI..." oninput="renderThresholds()" style="width:210px;">
+        </div>
+      </div>
+      <div class="tbl-wrap" style="max-height:310px;">
+        <table>
+          <thead>
+            <tr><th>Compound</th><th>Quality</th><th>Threshold</th><th>Unit</th><th>System / Matrix</th><th>Test Medium &amp; Background</th><th>Source &amp; DOI</th></tr>
+          </thead>
+          <tbody id="t3-thresh-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title"><span class="tag-dot" style="background:var(--purple);"></span> 3. T1b Pharmacopoeial Multi-Label Flavor Harmonization Rules</div>
+        <span class="badge b-purp">Zhuang645 (n=645, 150 families) &amp; CP2025 (n=128)</span>
+      </div>
+      <div class="tbl-wrap" style="max-height:none;">
+        <table>
+          <thead>
+            <tr><th>Pharmacopoeial Descriptors</th><th>Harmonized Label</th><th>DmcFlavor 4-Core</th><th>6-Attr Eval</th><th>Harmonization Rule</th></tr>
+          </thead>
+          <tbody id="t3-harm-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div><strong>PsyMix Benchmark &amp; Identifiability Audit</strong> &middot; <em>J. Chem. Inf. Model.</em> (2026) Companion &middot; Code: MIT License</div>
+  <div id="footer-status">Offline-safe bundle loaded &middot; Zero external requests</div>
+</footer>
+
+<script src="./assets/psymix_data_bundle.js"></script>
+<script>
+/* ============================================================================
+ * Pure-JS FIPS 180-4 SHA-256 fallback (ensures genuine byte-level SHA-256
+ * hashes even under file:// non-secure contexts where crypto.subtle is absent)
+ * ============================================================================ */
+function sha256PureJS(asciiStr) {
+  const bytes = new TextEncoder().encode(asciiStr);
+  const K = [
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+  ];
+  const H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const bitLen = bytes.length * 8;
+  const paddedLen = Math.ceil((bytes.length + 9) / 64) * 64;
+  const buf = new Uint8Array(paddedLen);
+  buf.set(bytes);
+  buf[bytes.length] = 0x80;
+  const dv = new DataView(buf.buffer);
+  dv.setUint32(paddedLen - 8, Math.floor(bitLen / 0x100000000), false);
+  dv.setUint32(paddedLen - 4, bitLen >>> 0, false);
+
+  const rotr = (x, n) => (x >>> n) | (x << (32 - n));
+  const W = new Uint32Array(64);
+  for (let off = 0; off < paddedLen; off += 64) {
+    for (let i = 0; i < 16; i++) W[i] = dv.getUint32(off + i * 4, false);
+    for (let i = 16; i < 64; i++) {
+      const s0 = rotr(W[i-15], 7) ^ rotr(W[i-15], 18) ^ (W[i-15] >>> 3);
+      const s1 = rotr(W[i-2], 17) ^ rotr(W[i-2], 19) ^ (W[i-2] >>> 10);
+      W[i] = (W[i-16] + s0 + W[i-7] + s1) >>> 0;
+    }
+    let [a,b,c,d,e,f,g,h] = H;
+    for (let i = 0; i < 64; i++) {
+      const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+      const ch = (e & f) ^ ((~e) & g);
+      const t1 = (h + S1 + ch + K[i] + W[i]) >>> 0;
+      const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+      const maj = (a & b) ^ (a & c) ^ (b & c);
+      const t2 = (S0 + maj) >>> 0;
+      h = g; g = f; f = e; e = (d + t1) >>> 0;
+      d = c; c = b; b = a; a = (t1 + t2) >>> 0;
+    }
+    H[0]=(H[0]+a)>>>0; H[1]=(H[1]+b)>>>0; H[2]=(H[2]+c)>>>0; H[3]=(H[3]+d)>>>0;
+    H[4]=(H[4]+e)>>>0; H[5]=(H[5]+f)>>>0; H[6]=(H[6]+g)>>>0; H[7]=(H[7]+h)>>>0;
+  }
+  return H.map(x => x.toString(16).padStart(8, '0')).join('');
+}
+
+async function computeSHA256(text) {
+  if (window.crypto && window.crypto.subtle && window.isSecureContext) {
+    try {
+      const buf = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+      return { hex, engine: 'WebCrypto SubtleCrypto' };
+    } catch (_) {}
+  }
+  return { hex: sha256PureJS(text), engine: 'Built-in Pure-JS SHA-256 (Offline)' };
+}
+
+/* ============================================================================
+ * GLOBAL STATE
+ * ============================================================================ */
+const DATA = window.PSYMIX_DATA || { slices: [], models: [], contrasts: [], presets: {}, curvatures: [], thresholds: [], harmonization: [] };
+let explorerView = 'slices';
+let activePresetKey = 'apple_sugar';
+let currentDesign = {
+  source: 'Apple Sugar Cohort (T2, n = 40; r = 0.982)',
+  analytes: [],
+  weights: [],
+  rows: [],
+};
+let latestAudit = { a2: {}, a3: {}, a6: {}, utc: '', payload: null, sha256: '', engine: '' };
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function fmtNum(v, d=3) {
+  if (v === null || v === undefined || v === '') return '—';
+  if (v === 'inf' || v === Infinity) return '∞';
+  const n = Number(v);
+  if (Number.isNaN(n)) return String(v);
+  return Math.abs(n) >= 1e5 ? n.toExponential(2) : n.toFixed(d);
+}
+function stateBadge(st) {
+  if (st === 'Pass') return '<span class="badge b-pass">Pass</span>';
+  if (st === 'Warning') return '<span class="badge b-warn">Warn</span>';
+  return '<span class="badge b-na">N/A</span>';
+}
+
+/* ============================================================================
+ * TAB SWITCHING
+ * ============================================================================ */
+function switchTab(id) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+
+/* ============================================================================
+ * TAB 1: EXPLORER (44 Slices / 706 Contrasts / 153 Models)
+ * ============================================================================ */
+function setExplorerView(view) {
+  explorerView = view;
+  const btns = document.querySelectorAll('#t1-subview .seg-btn');
+  btns[0].classList.toggle('active', view === 'slices');
+  btns[1].classList.toggle('active', view === 'contrasts');
+  btns[2].classList.toggle('active', view === 'models');
+  document.getElementById('f-criterion').style.display = (view === 'slices') ? '' : 'none';
+  document.getElementById('f-state').style.display     = (view === 'slices') ? '' : 'none';
+  document.getElementById('f-axis').style.display      = (view === 'contrasts') ? '' : 'none';
+  document.getElementById('f-family').style.display    = (view === 'models') ? '' : 'none';
+  document.getElementById('slice-detail-box').style.display = 'none';
+  renderExplorer();
+}
+
+function renderExplorer() {
+  const fTask = document.getElementById('f-task').value;
+  const fCrit = document.getElementById('f-criterion').value;
+  const fState = document.getElementById('f-state').value;
+  const fAxis = document.getElementById('f-axis').value;
+  const fFam = document.getElementById('f-family').value;
+  const q = document.getElementById('f-search').value.trim().toLowerCase();
+  const wrap = document.getElementById('explorer-table-wrap');
+  const badge = document.getElementById('t1-count-badge');
+
+  if (explorerView === 'slices') {
+    const rows = DATA.slices.filter(s => {
+      if (fTask !== 'ALL' && s.task_group !== fTask) return false;
+      if (fCrit !== 'ALL' && fState !== 'ALL' && s.states[fCrit] !== fState) return false;
+      if (fCrit === 'ALL' && fState !== 'ALL' && !Object.values(s.states).includes(fState)) return false;
+      if (q && !(s.slice + ' ' + s.holdout_unit + ' ' + s.input_tuple).toLowerCase().includes(q)) return false;
+      return true;
+    });
+    badge.textContent = `Showing ${rows.length} / ${DATA.slices.length} Audit Slices`;
+    let html = `<table><thead><tr>
+      <th>#</th><th>Task</th><th>Evaluation Slice</th><th>Holdout Unit (A1)</th><th>Inputs I=(S,P,Q,W,A)</th>
+      <th>n</th><th>A1</th><th>A2</th><th>A3</th><th>A4</th><th>A5</th><th>A6</th><th>Key Diagnostic</th>
+    </tr></thead><tbody>`;
+    rows.forEach(s => {
+      const diag = s.A2_r != null ? `r=${fmtNum(s.A2_r,3)}, VIF=${fmtNum(s.A2_VIF,1)}`
+                 : (s.A6_alpha != null ? `α=${fmtNum(s.A6_alpha,2)}`
+                 : (s.A3_k != null ? `k=${s.A3_k}, D=${s.A3_D}` : 'Qualitative / split audit'));
+      const nTag = s.small_n_no_ci ? `${s.n} <span class="badge b-amb">No CI</span>` : `${s.n ?? '—'}`;
+      html += `<tr class="clickable-row" onclick="showSliceDetail(${s.id})">
+        <td class="mono">${s.id}</td>
+        <td><span class="badge b-blue">${esc(s.task_group)}</span></td>
+        <td><strong>${esc(s.slice)}</strong></td>
+        <td>${esc(s.holdout_unit)}</td>
+        <td class="mono">${esc(s.input_tuple)}</td>
+        <td>${nTag}</td>
+        <td>${stateBadge(s.states.A1)}</td>
+        <td>${stateBadge(s.states.A2)}</td>
+        <td>${stateBadge(s.states.A3)}</td>
+        <td>${stateBadge(s.states.A4)}</td>
+        <td>${stateBadge(s.states.A5)}</td>
+        <td>${stateBadge(s.states.A6)}</td>
+        <td class="mono">${esc(diag)}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+  } else if (explorerView === 'contrasts') {
+    const rows = DATA.contrasts.filter(c => {
+      if (fTask !== 'ALL') {
+        if (fTask === 'T1a') {
+          if (c.task !== 'T1' || !(c.slice.startsWith('T1/P0') || c.slice.startsWith('T1/FART'))) return false;
+        } else if (fTask === 'T1b') {
+          if (c.task !== 'T1' || c.slice.startsWith('T1/P0') || c.slice.startsWith('T1/FART')) return false;
+        } else if (fTask === 'T6b') {
+          const is6b = /mcclure|ancha|coffee/i.test(c.dataset + ' ' + c.slice);
+          if (c.task !== 'T6' || !is6b) return false;
+        } else if (fTask === 'T6a') {
+          const is6b = /mcclure|ancha|coffee/i.test(c.dataset + ' ' + c.slice);
+          if (c.task !== 'T6' || is6b) return false;
+        } else if (c.task !== fTask) {
+          return false;
+        }
+      }
+      if (fAxis !== 'ALL' && c.axis !== fAxis) return false;
+      if (q && !(c.id + ' ' + c.dataset + ' ' + c.endpoint + ' ' + c.ref_model + ' ' + c.cand_model + ' ' + c.metric + ' ' + c.tier).toLowerCase().includes(q)) return false;
+      return true;
+    });
+    badge.textContent = `Showing ${rows.length} / ${DATA.contrasts.length} Scored Contrasts`;
+    let html = `<table><thead><tr>
+      <th>ID</th><th>Task</th><th>Axis</th><th>Dataset &amp; Endpoint</th><th>Reference &rarr; Candidate</th>
+      <th>Metric (Native Scale)</th><th>n</th><th>Ref / Cand</th><th>&Delta; [95% CI]</th>
+    </tr></thead><tbody>`;
+    rows.slice(0, 250).forEach(c => {
+      let ciStr = '—';
+      if (c.small_n_no_ci) {
+        ciStr = '<span class="badge b-amb">No CI (n &le; 3)</span>';
+      } else if (c.ci_lo != null && c.ci_hi != null) {
+        ciStr = `[${fmtNum(c.ci_lo,3)}, ${fmtNum(c.ci_hi,3)}]`;
+      }
+      const axisCls = c.axis === 'Information' ? 'b-blue' : (c.axis === 'Model' ? 'b-purp' : (c.axis === 'Calibration' ? 'b-amb' : 'b-na'));
+      html += `<tr>
+        <td class="mono">${esc(c.id)}</td>
+        <td><strong>${esc(c.task)}</strong></td>
+        <td><span class="badge ${axisCls}">${esc(c.axis)}</span></td>
+        <td>${esc(c.dataset)} &middot; <span style="color:var(--muted)">${esc(c.endpoint)}</span></td>
+        <td class="mono">${esc(c.ref_model)} &rarr; <strong>${esc(c.cand_model)}</strong></td>
+        <td>${esc(c.metric)} <span style="color:var(--muted)">(${esc(c.scale)})</span></td>
+        <td>${c.n ?? '—'}</td>
+        <td class="mono">${fmtNum(c.ref_val,3)} / ${fmtNum(c.cand_val,3)}</td>
+        <td class="mono"><strong>${fmtNum(c.delta,3)}</strong> ${ciStr}</td>
+      </tr>`;
+    });
+    if (rows.length > 250) {
+      html += `<tr><td colspan="9" style="text-align:center; color:var(--muted); padding:10px;">Showing first 250 of ${rows.length} matching contrasts. Refine task/axis/search filters above to inspect any contrast.</td></tr>`;
+    }
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+  } else {
+    const rows = DATA.models.filter(m => {
+      if (fTask !== 'ALL') {
+        const tList = Array.isArray(m.tasks) ? m.tasks : [m.task];
+        if (!tList.includes(fTask)) return false;
+      }
+      if (fFam !== 'ALL' && m.family !== fFam) return false;
+      if (q && !(m.model + ' ' + m.context + ' ' + m.definition + ' ' + m.family + ' ' + (m.tasks || []).join(' ')).toLowerCase().includes(q)) return false;
+      return true;
+    });
+    badge.textContent = `Showing ${rows.length} / ${DATA.models.length} Archived Configurations`;
+    let html = `<table><thead><tr>
+      <th>#</th><th>Tasks</th><th>Manuscript Model Label</th><th>Model Family</th><th>Domain Context</th><th>Placement</th><th>Archived Specification (Table S2)</th>
+    </tr></thead><tbody>`;
+    rows.forEach(m => {
+      const fCls = m.family.startsWith('1.') ? 'b-pass' : (m.family.startsWith('3.') ? 'b-blue' : (m.family.startsWith('4.') ? 'b-purp' : 'b-na'));
+      const tBadges = (Array.isArray(m.tasks) ? m.tasks : [m.task]).map(t => `<span class="badge b-blue">${esc(t)}</span>`).join(' ');
+      html += `<tr>
+        <td class="mono">${m.id}</td>
+        <td style="white-space:nowrap;">${tBadges}</td>
+        <td><strong class="mono">${esc(m.model)}</strong></td>
+        <td><span class="badge ${fCls}">${esc(m.family)}</span></td>
+        <td>${esc(m.context)}</td>
+        <td><span class="badge ${m.placement === 'main' ? 'b-blue' : 'b-na'}">${esc(m.placement)}</span></td>
+        <td>${esc(m.definition)}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+  }
+}
+
+function showSliceDetail(sliceId) {
+  const s = DATA.slices.find(x => x.id === sliceId);
+  if (!s) return;
+  const box = document.getElementById('slice-detail-box');
+  const linked = DATA.contrasts.filter(c => c.slice && c.slice.toLowerCase() === s.slice.toLowerCase()).slice(0, 6);
+  let linkHtml = linked.length
+    ? '<div style="margin-top:8px;"><strong>Matched Registry Contrasts (native scale):</strong><ul style="margin:4px 0 0 18px;">' +
+      linked.map(c => `<li><span class="mono">${esc(c.id)}</span> [${esc(c.axis)}]: <strong>${esc(c.cand_model)}</strong> vs ${esc(c.ref_model)} &rarr; &Delta; = <strong>${fmtNum(c.delta,3)}</strong> ${c.small_n_no_ci ? '(No CI; n&le;3)' : (c.ci_lo!=null ? `[${fmtNum(c.ci_lo,3)}, ${fmtNum(c.ci_hi,3)}]` : '')} (${esc(c.metric)})</li>`).join('') +
+      '</ul></div>'
+    : '';
+  box.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <strong>Slice #${s.id}: ${esc(s.slice)} (${esc(s.task_group)})</strong>
+      <button class="btn" onclick="document.getElementById('slice-detail-box').style.display='none'">Close</button>
+    </div>
+    <div style="margin-top:6px; font-size:12px;">
+      <strong>Holdout Unit:</strong> ${esc(s.holdout_unit)} &middot; <strong>Inputs:</strong> <span class="mono">${esc(s.input_tuple)}</span> &middot; <strong>n:</strong> ${s.n ?? '—'} (groups: ${s.groups ?? '—'})<br>
+      ${s.notes.A2 ? `<strong>A2 Note:</strong> ${esc(s.notes.A2)}<br>` : ''}
+      ${s.notes.A3 ? `<strong>A3 Note:</strong> ${esc(s.notes.A3)}<br>` : ''}
+      ${s.notes.A4 ? `<strong>A4 Note:</strong> ${esc(s.notes.A4)}<br>` : ''}
+      ${s.notes.A6 ? `<strong>A6 Note:</strong> ${esc(s.notes.A6)}` : ''}
+    </div>
+    ${linkHtml}`;
+  box.style.display = 'block';
+}
+
+/* ============================================================================
+ * TAB 2: PRE-EXPERIMENT IDENTIFIABILITY WORKBENCH (A2 / A3 / A6 / RECEIPT)
+ * ============================================================================ */
+function initPresets() {
+  const bar = document.getElementById('preset-buttons');
+  bar.innerHTML = Object.entries(DATA.presets).map(([k, p]) =>
+    `<button class="btn btn-preset ${k === activePresetKey ? 'active' : ''}" data-preset="${k}" onclick="loadPreset('${k}')">${esc(p.label)}</button>`
+  ).join('');
+  loadPreset(activePresetKey);
+}
+
+function loadPreset(key) {
+  const p = DATA.presets[key];
+  if (!p) return;
+  activePresetKey = key;
+  document.querySelectorAll('#preset-buttons .btn-preset').forEach(b => b.classList.toggle('active', b.dataset.preset === key));
+  document.getElementById('preset-desc').innerHTML = `<strong>Active preset:</strong> ${esc(p.description)}`;
+  currentDesign = {
+    source: p.label,
+    analytes: p.analytes.slice(),
+    weights: p.weights.slice(),
+    rows: p.rows.map(r => r.slice()),
+  };
+  document.getElementById('a2-weights-input').value = p.weights.join(', ');
+  document.getElementById('a3-k-input').value = p.a3_k;
+  document.getElementById('a3-k-slider').value = Math.min(15, p.a3_k);
+
+  // Set A6 fields from preset
+  const a6 = p.a6;
+  document.getElementById('a6-mode').value = a6.mode;
+  document.getElementById('a6-cA').value = a6.cA;
+  document.getElementById('a6-IA').value = a6.IA;
+  if (a6.K != null) document.getElementById('a6-K').value = a6.K;
+  if (a6.zero_cross != null) document.getElementById('a6-zc').value = a6.zero_cross;
+  document.getElementById('a6-c1').value = a6.c1;
+  document.getElementById('a6-smax').value = a6.scale_max;
+
+  computeA2();
+  updateA3(p.a3_k, false);
+  updateA6(false);
+  refreshReceipt();
+}
+
+function handleCSVFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const lines = String(e.target.result).trim().split(/\r?\n/).filter(l => l.trim());
+    if (lines.length < 3) return;
+    const hdr = lines[0].split(',').map(s => s.trim());
+    const analytes = [];
+    const weights = [];
+    for (let j = 1; j < hdr.length; j++) {
+      const m = hdr[j].match(/^(.+?)_w([0-9.]+)$/i);
+      if (m) { analytes.push(m[1]); weights.push(parseFloat(m[2])); }
+      else { analytes.push(hdr[j]); weights.push(1.0); }
+    }
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = lines[i].split(',').map(x => parseFloat(x.trim()));
+      const vals = cols.slice(1, 1 + analytes.length);
+      if (vals.length === analytes.length && vals.every(v => Number.isFinite(v))) rows.push(vals);
+    }
+    if (rows.length >= 3 && analytes.length >= 2) {
+      currentDesign = { source: `Custom CSV: ${file.name} (n = ${rows.length})`, analytes, weights, rows };
+      document.getElementById('a2-weights-input').value = weights.join(', ');
+      document.getElementById('a3-k-input').value = analytes.length;
+      document.getElementById('a3-k-slider').value = Math.min(15, analytes.length);
+      document.getElementById('preset-desc').innerHTML = `<strong>Loaded local CSV:</strong> ${esc(file.name)} (${rows.length} samples &times; ${analytes.length} analytes, processed strictly in-browser).`;
+      document.querySelectorAll('#preset-buttons .btn-preset').forEach(b => b.classList.remove('active'));
+      computeA2();
+      updateA3(analytes.length, false);
+      refreshReceipt();
+    }
+  };
+  reader.readAsText(file);
+}
+
+function downloadSampleCSV() {
+  const p = DATA.presets.apple_sugar;
+  let csv = 'sample_id,Glucose_w0.5067,Fructose_w0.8769,Sucrose_w1.0000\n';
+  p.rows.slice(0, 15).forEach((r, i) => { csv += `S${String(i+1).padStart(2,'0')},${r[0]},${r[1]},${r[2]}\n`; });
+  triggerDownload(csv, 'psymix_sample_design.csv', 'text/csv');
+}
+
+function pearsonR(xs, ys) {
+  const n = xs.length;
+  const mx = xs.reduce((a,b)=>a+b,0)/n, my = ys.reduce((a,b)=>a+b,0)/n;
+  let num = 0, dx = 0, dy = 0;
+  for (let i = 0; i < n; i++) {
+    const a = xs[i]-mx, b = ys[i]-my;
+    num += a*b; dx += a*a; dy += b*b;
+  }
+  return (dx > 0 && dy > 0) ? Math.max(-1, Math.min(1, num / Math.sqrt(dx * dy))) : 1.0;
+}
+
+/* Seeded deterministic PRNG (Mulberry32) for reproducible client-side Dirichlet design scan */
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function() {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function randGamma(rng, alpha) {
+  if (alpha < 1) return randGamma(rng, alpha + 1) * Math.pow(rng(), 1 / alpha);
+  const d = alpha - 1/3, c = 1 / Math.sqrt(9 * d);
+  while (true) {
+    let x, v;
+    do {
+      const u1 = Math.max(1e-12, rng()), u2 = rng();
+      x = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+      v = 1 + c * x;
+    } while (v <= 0);
+    v = v * v * v;
+    const u = rng();
+    if (u < 1 - 0.0331 * x * x * x * x) return d * v;
+    if (Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v;
+  }
+}
+
+function estimateDirichletSDForTargetR(totals, weights, targetR) {
+  const k = weights.length;
+  if (k < 2) return null;
+  const meanT = totals.reduce((a,b)=>a+b,0) / totals.length;
+  const sdT = Math.sqrt(totals.reduce((a,b)=>a+(b-meanT)**2,0) / totals.length);
+  const cvT = meanT > 0 ? sdT / meanT : 0.2;
+  const rng = mulberry32(20261125);
+  const Nsim = 350;
+  // Scan concentration kappa from 80 down to 0.35 until simulated r <= targetR
+  const kappas = [80, 40, 20, 12, 8, 5, 3.5, 2.5, 1.8, 1.3, 0.9, 0.65, 0.45, 0.30];
+  let bestSD = null;
+  for (const kap of kappas) {
+    const sums = [], loads = [], domShares = [];
+    for (let i = 0; i < Nsim; i++) {
+      const u1 = Math.max(1e-12, rng()), u2 = rng();
+      const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+      const tot = Math.max(0.2 * meanT, meanT * (1 + cvT * z));
+      const g = [];
+      let gs = 0;
+      for (let j = 0; j < k; j++) { const v = randGamma(rng, kap / k); g.push(v); gs += v; }
+      let ld = 0;
+      for (let j = 0; j < k; j++) { const sh = g[j] / gs; ld += tot * sh * weights[j]; }
+      sums.push(tot); loads.push(ld); domShares.push(g[0] / gs);
+    }
+    const rSim = pearsonR(sums, loads);
+    const mS = domShares.reduce((a,b)=>a+b,0) / Nsim;
+    const sdPP = Math.sqrt(domShares.reduce((a,b)=>a+(b-mS)**2,0) / Nsim) * 100.0;
+    bestSD = sdPP;
+    if (rSim <= targetR) return { sdPP, kappa: kap, achievedR: rSim };
+  }
+  return { sdPP: bestSD, kappa: 0.30, achievedR: null };
+}
+
+function recomputeA2FromInputs() {
+  const ws = document.getElementById('a2-weights-input').value.split(',').map(x => parseFloat(x.trim())).filter(x => Number.isFinite(x));
+  if (ws.length === currentDesign.analytes.length) currentDesign.weights = ws;
+  computeA2();
+  refreshReceipt();
+}
+
+function computeA2() {
+  const rows = currentDesign.rows;
+  const ws = currentDesign.weights;
+  const targetR = Math.max(0.5, Math.min(0.97, parseFloat(document.getElementById('a2-target-r').value) || 0.90));
+  const sums = rows.map(r => r.reduce((a,b)=>a+b,0));
+  const loads = rows.map(r => r.reduce((acc, v, j) => acc + v * (ws[j] ?? 1.0), 0));
+  const r = pearsonR(sums, loads);
+  const vif = (1 - r*r) > 1e-12 ? 1 / (1 - r*r) : Infinity;
+  const isWarn = (r >= 0.98);
+  const dir = estimateDirichletSDForTargetR(sums, ws, targetR);
+
+  document.getElementById('a2-r-val').textContent = fmtNum(r, 4);
+  document.getElementById('a2-vif-val').textContent = vif > 1e6 ? '∞' : fmtNum(vif, 1);
+  document.getElementById('a2-sd-val').textContent = dir && dir.sdPP ? `${dir.sdPP.toFixed(1)} pp` : 'N/A';
+
+  const b = document.getElementById('a2-badge');
+  b.className = 'badge ' + (isWarn ? 'b-warn' : 'b-pass');
+  b.textContent = isWarn ? 'WARNING: r ≥ 0.98 (Unidentifiable)' : 'PASS: Separable (r < 0.98)';
+
+  // Render crisp inline SVG scatter plot
+  const W = 520, H = 165, padL = 48, padR = 16, padT = 16, padB = 30;
+  const minX = Math.min(...sums), maxX = Math.max(...sums) + 1e-6;
+  const minY = Math.min(...loads), maxY = Math.max(...loads) + 1e-6;
+  const sx = x => padL + (x - minX) / (maxX - minX) * (W - padL - padR);
+  const sy = y => H - padB - (y - minY) / (maxY - minY) * (H - padT - padB);
+  const pts = sums.map((x, i) => `<circle cx="${sx(x).toFixed(1)}" cy="${sy(loads[i]).toFixed(1)}" r="3.4" fill="${isWarn ? '#C0392B' : '#1B7F6B'}" fill-opacity="0.82" stroke="#FFFFFF" stroke-width="0.6"/>`).join('');
+  document.getElementById('a2-svg-box').innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" width="100%" height="165" style="display:block;">
+      <rect x="${padL}" y="${padT}" width="${W-padL-padR}" height="${H-padT-padB}" fill="#FAFBFD" stroke="#E2E8F0"/>
+      <line x1="${sx(minX).toFixed(1)}" y1="${sy(minY).toFixed(1)}" x2="${sx(maxX).toFixed(1)}" y2="${sy(maxY).toFixed(1)}" stroke="#0072B2" stroke-width="1.4" stroke-dasharray="4,3"/>
+      ${pts}
+      <text x="${(padL+W-padR)/2}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="#475569" font-weight="600">Unweighted Total Amount (SUM-mass)</text>
+      <text x="14" y="${(padT+H-padB)/2}" text-anchor="middle" font-size="10.5" fill="#475569" font-weight="600" transform="rotate(-90 14 ${(padT+H-padB)/2})">Potency Load</text>
+      <rect x="${W-154}" y="${padT+6}" width="132" height="22" rx="4" fill="${isWarn ? '#FCECEB' : '#E6F4F0'}" stroke="${isWarn ? '#F2B8B5' : '#A7DDD0'}"/>
+      <text x="${W-88}" y="${padT+21}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${isWarn ? '#C0392B' : '#1B7F6B'}">r = ${r.toFixed(3)} · VIF = ${vif>1e5?'∞':vif.toFixed(1)}</text>
+    </svg>`;
+
+  const al = document.getElementById('a2-alert');
+  if (isWarn) {
+    al.className = 'alert-box alert-red';
+    al.innerHTML = `<strong>Operational Collinearity Alert (r &ge; 0.98):</strong> Relative potency weights are masked by total amount. <strong>Prescription:</strong> Cross total load orthogonally with Dirichlet component-share blends (dominant-component SD &approx; <strong>${dir && dir.sdPP ? dir.sdPP.toFixed(1) : '15–29'} pp</strong> to reach r = ${targetR.toFixed(2)}), or vary ratios at fixed total concentration.`;
+  } else {
+    al.className = 'alert-box alert-teal';
+    al.innerHTML = `<strong>Separable Design (r &lt; 0.98):</strong> Unweighted totals and potency-weighted loads share ${(r*r*100).toFixed(1)}% variance (unique leverage ${((1-r*r)*100).toFixed(1)}%), permitting direct testing of relative potency weights.`;
+  }
+  latestAudit.a2 = { n_samples: rows.length, n_analytes: ws.length, pearson_r: Number(r.toFixed(4)), vif: vif > 1e6 ? 'inf' : Number(vif.toFixed(2)), target_r: targetR, required_dirichlet_sd_pp: dir && dir.sdPP ? Number(dir.sdPP.toFixed(1)) : null, verdict: isWarn ? 'WARNING' : 'PASS' };
+}
+
+function derangementsBigInt(k) {
+  if (k <= 0) return 1n;
+  if (k === 1) return 0n;
+  let d0 = 1n, d1 = 0n;
+  for (let i = 2; i <= k; i++) {
+    const dn = BigInt(i - 1) * (d0 + d1);
+    d0 = d1; d1 = dn;
+  }
+  return d1;
+}
+function fmtBigInt(bn) {
+  const s = bn.toString();
+  if (s.length <= 9) return Number(s).toLocaleString('en-US');
+  return `${s[0]}.${s.slice(1,3)}×10^${s.length - 1}`;
+}
+
+function updateA3(val, doRefresh = true) {
+  const k = Math.max(1, Math.min(24, parseInt(val, 10) || 1));
+  document.getElementById('a3-k-input').value = k;
+  document.getElementById('a3-k-slider').value = Math.min(15, k);
+  const D = derangementsBigInt(k);
+  const pMin = 1.0 / (1.0 + Number(D));
+  const isWarn = (k < 5);
+
+  document.getElementById('a3-k-val').textContent = k;
+  document.getElementById('a3-d-val').textContent = fmtBigInt(D);
+  document.getElementById('a3-p-val').textContent = pMin < 1e-4 ? '< 0.0001' : pMin.toFixed(3);
+
+  const b = document.getElementById('a3-badge');
+  b.className = 'badge ' + (isWarn ? 'b-warn' : 'b-pass');
+  b.textContent = isWarn ? 'WARNING: k < 5 (p_min > 0.05)' : 'PASS: k ≥ 5 (p_min ≤ 0.022)';
+
+  // Render crisp horizontal bar ladder for k = 2..8 showing resolution floor vs 0.05 threshold
+  const W = 520, H = 165, padL = 44, padR = 72, padT = 18, padB = 26;
+  const ks = [2, 3, 4, 5, 6, 7, 8];
+  const barH = 13, gap = 4.5;
+  const x05 = padL + 0.05 / 0.55 * (W - padL - padR);
+  let bars = '';
+  ks.forEach((ki, idx) => {
+    const di = Number(derangementsBigInt(ki));
+    const pi = 1 / (1 + di);
+    const y = padT + idx * (barH + gap);
+    const bw = Math.max(3, Math.min(1, pi / 0.55) * (W - padL - padR));
+    const active = (ki === k);
+    const col = ki < 5 ? (active ? '#C0392B' : '#E8A59E') : (active ? '#1B7F6B' : '#9ED3C5');
+    const labelX = (ki >= 5) ? Math.max(padL + bw + 6, x05 + 8) : (padL + bw + 6);
+    bars += `<text x="${padL-6}" y="${y+10}" text-anchor="end" font-size="10.5" font-weight="${active?'700':'600'}" fill="${active?'#2C3E50':'#64748B'}">k=${ki}</text>`;
+    bars += `<rect x="${padL}" y="${y}" width="${bw.toFixed(1)}" height="${barH}" rx="3" fill="${col}" stroke="${active?'#2C3E50':'none'}" stroke-width="1.2"/>`;
+    bars += `<text x="${labelX.toFixed(1)}" y="${y+10}" font-size="10" font-weight="${active?'700':'500'}" fill="#334155">D=${di.toLocaleString()}, p_min=${pi<0.001?'<0.001':pi.toFixed(3)}</text>`;
+  });
+  document.getElementById('a3-svg-box').innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" width="100%" height="165" style="display:block;">
+      <line x1="${x05.toFixed(1)}" y1="${padT-4}" x2="${x05.toFixed(1)}" y2="${H-padB+4}" stroke="#D55E00" stroke-width="1.3" stroke-dasharray="4,3"/>
+      <text x="${x05.toFixed(1)}" y="${H-9}" text-anchor="middle" font-size="10" font-weight="700" fill="#D55E00">p = 0.05 floor</text>
+      ${bars}
+    </svg>`;
+
+  const al = document.getElementById('a3-alert');
+  if (isWarn) {
+    al.className = 'alert-box alert-red';
+    al.innerHTML = `<strong>Insufficient Assignment Resolution (k = ${k}):</strong> Only D(${k}) = ${fmtBigInt(D)} derangements exist, capping minimum attainable rank at p_min = ${pMin.toFixed(3)} (&gt; 0.05). <strong>Prescription:</strong> Include at least <strong>k &ge; 5</strong> distinct active tastants (D(5) = 44 &rArr; p_min = 0.022).`;
+  } else {
+    al.className = 'alert-box alert-teal';
+    al.innerHTML = `<strong>Adequate Combinatorial Space (k = ${k}):</strong> D(${k}) = ${fmtBigInt(D)} derangements permit restricted reassignment ranks down to p_min = ${pMin < 1e-4 ? '< 0.0001' : pMin.toFixed(4)} (subject to scientific exchangeability).`;
+  }
+  latestAudit.a3 = { k_active: k, derangements: D.toString(), p_min: Number(pMin.toPrecision(4)), verdict: isWarn ? 'WARNING' : 'PASS' };
+  if (doRefresh) refreshReceipt();
+}
+
+function updateA6(doRefresh = true) {
+  const mode = document.getElementById('a6-mode').value;
+  document.getElementById('a6-K-wrap').style.display  = (mode === 'dot_log') ? '' : 'none';
+  document.getElementById('a6-zc-wrap').style.display = (mode === 'source_affine') ? '' : 'none';
+
+  const cA = Math.max(1e-5, parseFloat(document.getElementById('a6-cA').value) || 0.0837);
+  const IA = Math.max(0.01, parseFloat(document.getElementById('a6-IA').value) || 1.31);
+  const K  = Math.max(0.01, parseFloat(document.getElementById('a6-K').value) || 2.33647);
+  const zc = parseFloat(document.getElementById('a6-zc').value) || 34.613;
+  const c1 = Math.max(0, parseFloat(document.getElementById('a6-c1').value) || 1.076);
+  const smax = Math.max(1, parseFloat(document.getElementById('a6-smax').value) || 15);
+
+  let H0, H1, alpha, predI1, predDelta, isWarn = false, warnMsg = '';
+  if (mode === 'dot_log') {
+    H0 = Math.log(1 + cA / K);
+    H1 = Math.log(1 + c1 / K);
+    alpha = IA / H0;
+    predI1 = alpha * H1;
+    predDelta = predI1 - IA;
+    const alphaNorm = alpha * (15.0 / smax);
+    if (alphaNorm >= 15 || (IA / smax) < 0.15 || predI1 > smax * 0.92) {
+      isWarn = true;
+      warnMsg = `<strong>Near-Floor Amplification Hazard (A6):</strong> Anchor I_A = ${IA.toFixed(2)} (${((IA/smax)*100).toFixed(1)}% of scale) at H_0 = ${H0.toFixed(4)} drives multiplier &alpha; = <strong>${alpha.toFixed(2)}</strong>, projecting I_1 = ${predI1.toFixed(2)} (&Delta;&#206; = ${predDelta >= 0 ? '+' : ''}${predDelta.toFixed(2)}). <strong>Prescription:</strong> Anchor on a mid-scale preparation (30–60% of scale) or use @5/@10 shrunk-affine calibration.`;
+    }
+  } else {
+    const denom = Math.max(1e-3, cA - zc);
+    H0 = denom;
+    const c0 = (activePresetKey === 'grape_to_yogurt' && DATA.presets.grape_to_yogurt.a6.c0) ? DATA.presets.grape_to_yogurt.a6.c0 : 38.0;
+    H1 = Math.max(0, c1 - zc);
+    alpha = IA / denom;
+    predDelta = IA * (c1 - c0) / denom;
+    predI1 = Math.max(0, IA * (c1 - zc) / denom);
+    const propDelta = IA * (c1 - c0) / cA;
+    if (Math.abs(zc) > 0.05 * cA) {
+      isWarn = true;
+      warnMsg = `<strong>Extrapolated Zero-Crossing Retention (A6):</strong> Retaining source &minus;b/a = <strong>${zc.toFixed(3)} g L⁻¹</strong> shrinks effective anchor denominator from ${cA.toFixed(1)} to ${denom.toFixed(1)}, shifting &Delta;&#206; from +${propDelta.toFixed(2)} (proportional) to <strong>+${predDelta.toFixed(2)}</strong> without an independently measured threshold.`;
+    }
+  }
+
+  document.getElementById('a6-h0-val').textContent = mode === 'dot_log' ? H0.toFixed(4) : `${H0.toFixed(1)} eff`;
+  document.getElementById('a6-alpha-val').textContent = mode === 'dot_log' ? alpha.toFixed(2) : `${(alpha*100).toFixed(2)}/100`;
+  document.getElementById('a6-pred-val').textContent = `${predDelta >= 0 ? '+' : ''}${predDelta.toFixed(2)} (${predI1.toFixed(2)})`;
+
+  const b = document.getElementById('a6-badge');
+  b.className = 'badge ' + (isWarn ? 'b-warn' : 'b-pass');
+  b.textContent = isWarn ? 'WARNING: High Amplification / Offset' : 'PASS: Well-Conditioned Anchor';
+
+  // Live SVG Geometric Ray Diagram (echoing Fig. 5c/5d)
+  const W = 520, H = 165, padL = 48, padR = 20, padT = 16, padB = 28;
+  const maxX = Math.max(H0, H1, mode === 'dot_log' ? 0.45 : cA) * 1.15;
+  const maxY = Math.max(smax, predI1 * 1.08);
+  const sx = x => padL + (x / maxX) * (W - padL - padR);
+  const sy = y => H - padB - (y / maxY) * (H - padT - padB);
+  const rayCol = isWarn ? '#C0392B' : '#1B7F6B';
+  const yCeiling = sy(smax);
+  document.getElementById('a6-svg-box').innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" width="100%" height="165" style="display:block;">
+      <rect x="${padL}" y="${padT}" width="${W-padL-padR}" height="${H-padT-padB}" fill="#FAFBFD" stroke="#E2E8F0"/>
+      <line x1="${padL}" y1="${yCeiling.toFixed(1)}" x2="${W-padR}" y2="${yCeiling.toFixed(1)}" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="${W-padR-4}" y="${(yCeiling-3).toFixed(1)}" text-anchor="end" font-size="9.5" fill="#64748B">Scale max (${smax})</text>
+      <line x1="${sx(0).toFixed(1)}" y1="${sy(0).toFixed(1)}" x2="${sx(H1).toFixed(1)}" y2="${sy(predI1).toFixed(1)}" stroke="${rayCol}" stroke-width="2" stroke-dasharray="5,3"/>
+      <circle cx="${sx(H0).toFixed(1)}" cy="${sy(IA).toFixed(1)}" r="4.8" fill="${rayCol}" stroke="#FFFFFF" stroke-width="1"/>
+      <rect x="${(sx(H1)-4).toFixed(1)}" y="${(sy(predI1)-4).toFixed(1)}" width="8" height="8" fill="#FFFFFF" stroke="${rayCol}" stroke-width="1.8"/>
+      <text x="${(sx(H0)+8).toFixed(1)}" y="${Math.max(padT+12, sy(IA)+4).toFixed(1)}" font-size="10" font-weight="700" fill="${rayCol}">Anchor (${IA.toFixed(2)})</text>
+      <text x="${(sx(H1)-10).toFixed(1)}" y="${Math.max(padT+18, sy(predI1)+4).toFixed(1)}" text-anchor="end" font-size="10" font-weight="700" fill="${rayCol}">Pred ${predI1.toFixed(2)}</text>
+      <text x="${(padL+W-padR)/2}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="#475569" font-weight="600">${mode === 'dot_log' ? 'Unscaled Log Response H(c) = ln(1 + U/K)' : 'Effective Shifted Sugar Load (S − b/a)'}</text>
+      <text x="14" y="${(padT+H-padB)/2}" text-anchor="middle" font-size="10.5" fill="#475569" font-weight="600" transform="rotate(-90 14 ${(padT+H-padB)/2})">Rating (0–${smax})</text>
+    </svg>`;
+
+  const al = document.getElementById('a6-alert');
+  if (isWarn) {
+    al.className = 'alert-box alert-red';
+    al.innerHTML = warnMsg;
+  } else {
+    al.className = 'alert-box alert-teal';
+    al.innerHTML = `<strong>Well-Conditioned Calibration:</strong> Anchor sits safely above the scale floor (&alpha; = ${alpha.toFixed(2)}, predicted I_1 = ${predI1.toFixed(2)} within 0–${smax} scale).`;
+  }
+  latestAudit.a6 = { mode, cA, IA, K: mode === 'dot_log' ? K : null, zero_crossing: mode === 'source_affine' ? zc : null, c1, scale_max: smax, H0: Number(H0.toFixed(5)), alpha: Number(alpha.toFixed(3)), pred_I1: Number(predI1.toFixed(3)), pred_delta: Number(predDelta.toFixed(3)), verdict: isWarn ? 'WARNING' : 'PASS' };
+  if (doRefresh) refreshReceipt();
+}
+
+async function refreshReceipt() {
+  const utc = new Date().toISOString();
+  const payload = {
+    schema: 'PsyMix-PreRegistration-Identifiability-Receipt-v1.0',
+    generated_utc: utc,
+    design_source: currentDesign.source,
+    analytes: currentDesign.analytes,
+    weights: currentDesign.weights,
+    audit_A2_collinearity: latestAudit.a2,
+    audit_A3_derangement_floor: latestAudit.a3,
+    audit_A6_anchor_geometry: latestAudit.a6,
+    overall_readiness: [latestAudit.a2.verdict, latestAudit.a3.verdict, latestAudit.a6.verdict].includes('WARNING')
+      ? 'ACTION_REQUIRED_BEFORE_DATA_COLLECTION'
+      : 'IDENTIFIABILITY_CHECKS_PASSED',
+  };
+  const canonicalJson = JSON.stringify(payload, null, 2);
+  const { hex, engine } = await computeSHA256(canonicalJson);
+  latestAudit.utc = utc;
+  latestAudit.payload = payload;
+  latestAudit.sha256 = hex;
+  latestAudit.engine = engine;
+
+  document.getElementById('sha-engine-badge').textContent = engine;
+  document.getElementById('receipt-hash-display').textContent = `SHA-256: ${hex}`;
+  document.getElementById('receipt-summary').innerHTML = `
+    <div><strong>UTC Lock Timestamp:</strong> <span class="mono">${utc}</span></div>
+    <div><strong>Design Source:</strong> ${esc(currentDesign.source)}</div>
+    <div><strong>Verdicts:</strong> A2 ${stateBadge(latestAudit.a2.verdict === 'PASS' ? 'Pass' : 'Warning')} &middot; A3 ${stateBadge(latestAudit.a3.verdict === 'PASS' ? 'Pass' : 'Warning')} &middot; A6 ${stateBadge(latestAudit.a6.verdict === 'PASS' ? 'Pass' : 'Warning')}</div>
+    <div><strong>Overall Status:</strong> <span class="mono" style="font-weight:700; color:${payload.overall_readiness.startsWith('ACTION')?'#C0392B':'#1B7F6B'}">${payload.overall_readiness}</span></div>
+  `;
+}
+
+function triggerDownload(content, filename, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function exportReceipt(fmt) {
+  await refreshReceipt();
+  const stamp = latestAudit.utc.replace(/[:.]/g, '-').slice(0, 19);
+  if (fmt === 'json') {
+    const out = Object.assign({}, latestAudit.payload, { payload_sha256: latestAudit.sha256, hash_engine: latestAudit.engine });
+    triggerDownload(JSON.stringify(out, null, 2) + '\n', `psymix_audit_receipt_${stamp}.json`, 'application/json');
+    document.getElementById('export-status').textContent = `✓ Exported JSON receipt (SHA-256: ${latestAudit.sha256.slice(0, 16)}...)`;
+  } else {
+    const p = latestAudit.payload;
+    const md = [
+      '# PsyMix Pre-Registration Identifiability Audit Receipt',
+      '',
+      `- **UTC Timestamp:** \`${p.generated_utc}\``,
+      `- **Design Source:** ${p.design_source}`,
+      `- **Overall Verdict:** **${p.overall_readiness}**`,
+      `- **Payload SHA-256:** \`${latestAudit.sha256}\` (${latestAudit.engine})`,
+      '',
+      '## Diagnostic Summary',
+      `- **A2 Collinearity:** r = ${p.audit_A2_collinearity.pearson_r}, VIF = ${p.audit_A2_collinearity.vif}, Dirichlet SD for r = ${p.audit_A2_collinearity.target_r}: ${p.audit_A2_collinearity.required_dirichlet_sd_pp} pp -> **${p.audit_A2_collinearity.verdict}**`,
+      `- **A3 Derangement Floor:** k = ${p.audit_A3_derangement_floor.k_active}, D(k) = ${p.audit_A3_derangement_floor.derangements}, p_min = ${p.audit_A3_derangement_floor.p_min} -> **${p.audit_A3_derangement_floor.verdict}**`,
+      `- **A6 Anchor Geometry:** mode = ${p.audit_A6_anchor_geometry.mode}, alpha = ${p.audit_A6_anchor_geometry.alpha}, predicted delta = ${p.audit_A6_anchor_geometry.pred_delta} -> **${p.audit_A6_anchor_geometry.verdict}**`,
+      ''
+    ].join('\n');
+    triggerDownload(md, `psymix_audit_receipt_${stamp}.md`, 'text/markdown');
+    document.getElementById('export-status').textContent = `✓ Exported Markdown receipt (SHA-256: ${latestAudit.sha256.slice(0, 16)}...)`;
+  }
+}
+
+/* ============================================================================
+ * TAB 3: CURATED PARAMETERS & PROVENANCE
+ * ============================================================================ */
+function renderTab3() {
+  document.getElementById('t3-curv-body').innerHTML = DATA.curvatures.map(c => `<tr>
+    <td><strong>${esc(c.channel)}</strong></td>
+    <td class="mono">${esc(c.model)}</td>
+    <td class="mono">${esc(c.formula)}</td>
+    <td class="mono"><strong>${c.K}</strong></td>
+    <td>${esc(c.basis)}</td>
+    <td>${esc(c.ref)} &middot; <a class="doi-link" href="https://doi.org/${esc(c.doi)}" target="_blank" rel="noopener">DOI</a></td>
+  </tr>`).join('');
+
+  document.getElementById('t3-harm-body').innerHTML = DATA.harmonization.map(h => `<tr>
+    <td><strong>${esc(h.zh)}</strong></td>
+    <td><span class="badge b-blue">${esc(h.en)}</span></td>
+    <td>${h.core4 === 'Yes' ? '<span class="badge b-pass">Yes</span>' : '<span class="badge b-na">No</span>'}</td>
+    <td>${h.eval6 === 'Yes' ? '<span class="badge b-pass">Yes</span>' : '<span class="badge b-warn">'+esc(h.eval6)+'</span>'}</td>
+    <td>${esc(h.rule)}</td>
+  </tr>`).join('');
+
+  renderThresholds();
+}
+
+function renderThresholds() {
+  const qf = document.getElementById('t3-qual-filter').value;
+  const s = document.getElementById('t3-search').value.trim().toLowerCase();
+  const rows = DATA.thresholds.filter(r => {
+    if (qf !== 'ALL' && r.quality !== qf) return false;
+    if (s && !(r.compound + ' ' + r.matrix + ' ' + r.medium + ' ' + r.ref + ' ' + r.doi).toLowerCase().includes(s)) return false;
+    return true;
+  });
+  document.getElementById('t3-thresh-body').innerHTML = rows.map(r => `<tr>
+    <td><strong>${esc(r.compound)}</strong></td>
+    <td><span class="badge ${r.quality==='Bitterness'?'b-amb':(r.quality==='Astringency'?'b-purp':(r.quality==='Sweetness'?'b-blue':'b-pass'))}">${esc(r.quality)}</span></td>
+    <td class="mono"><strong>${r.threshold}</strong></td>
+    <td class="mono">${esc(r.unit)}</td>
+    <td>${esc(r.matrix)}</td>
+    <td>${esc(r.medium)}</td>
+    <td>${esc(r.ref)} &middot; <a class="doi-link" href="https://doi.org/${esc(r.doi)}" target="_blank" rel="noopener">DOI</a></td>
+  </tr>`).join('');
+}
+
+/* ============================================================================
+ * DRAG-AND-DROP + BOOTSTRAP
+ * ============================================================================ */
+function initDropzone() {
+  const dz = document.getElementById('csv-dropzone');
+  ['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+  dz.addEventListener('drop', e => {
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) handleCSVFile(e.dataTransfer.files[0]);
+  });
+}
+
+window.__PSYMIX_JS_ERRORS = [];
+document.documentElement.dataset.jsErrors = '0';
+window.addEventListener('error', ev => {
+  window.__PSYMIX_JS_ERRORS.push(String(ev.message || ev.error || 'Unknown error'));
+  document.documentElement.dataset.jsErrors = String(window.__PSYMIX_JS_ERRORS.length);
+});
+window.addEventListener('unhandledrejection', ev => {
+  window.__PSYMIX_JS_ERRORS.push(String(ev.reason || 'Unhandled rejection'));
+  document.documentElement.dataset.jsErrors = String(window.__PSYMIX_JS_ERRORS.length);
+});
+
+(function boot() {
+  // Self-test pure-JS SHA-256 against FIPS 180-4 test vector "abc"
+  const fipsOk = (sha256PureJS('abc') === 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
+  if (!fipsOk) {
+    window.__PSYMIX_JS_ERRORS.push('SHA-256 self-test failed');
+    document.documentElement.dataset.jsErrors = String(window.__PSYMIX_JS_ERRORS.length);
+  }
+  renderExplorer();
+  initPresets();
+  renderTab3();
+  initDropzone();
+  // Support ?tab=1|2|3, ?view=slices|contrasts|models, and ?preset=key for direct linking / automated QA
+  const params = new URLSearchParams(window.location.search);
+  const t = params.get('tab');
+  if (t === '1' || t === 'tab1') switchTab('tab1');
+  else if (t === '2' || t === 'tab2') switchTab('tab2');
+  else if (t === '3' || t === 'tab3') switchTab('tab3');
+  const vw = params.get('view');
+  if (vw === 'slices' || vw === 'contrasts' || vw === 'models') setExplorerView(vw);
+  const tf = params.get('task');
+  if (tf) {
+    const sel = document.getElementById('f-task');
+    if ([...sel.options].some(o => o.value === tf)) { sel.value = tf; renderExplorer(); }
+  }
+  const pr = params.get('preset');
+  if (pr && DATA.presets[pr]) loadPreset(pr);
+  document.getElementById('footer-status').textContent =
+    `Offline bundle ${DATA.meta?.version || 'v1.0'} · ${DATA.slices.length} slices · ${DATA.models.length} models · ${DATA.contrasts.length} contrasts · SHA-256 FIPS-180-4: ${fipsOk ? 'VERIFIED' : 'ERR'} · ${window.__PSYMIX_JS_ERRORS.length} JS errors`;
+})();
+</script>
+</body>
+</html>
